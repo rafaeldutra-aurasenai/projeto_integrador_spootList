@@ -1,10 +1,9 @@
 import { NavigationContainer } from "@react-navigation/native";
-
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import homeScreen from "../screens/homeScreen"
-import cadastroMusicaScreen from "../screens/cadastroMusicaScreen"
-import editarMusicaScreen from "../screens/cadastroMusicaScreen"
+import HomeScreen from "../screens/homeScreen";
+import CadastroMusicaScreen from "../screens/cadastroMusicaScreen";
+import EditarMusicaScreen from "../screens/editarMusicaScreen";
 
 const Stack = createNativeStackNavigator();
 
