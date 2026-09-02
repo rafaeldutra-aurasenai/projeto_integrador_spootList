@@ -1,0 +1,1 @@
+import appNavigator from "./src/navigation/appNavigator"
