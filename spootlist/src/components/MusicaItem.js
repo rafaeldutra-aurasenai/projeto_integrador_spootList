@@ -7,7 +7,7 @@ import {
 
 export default function MusicaItem({
   musica,
-  onConcluir,
+  onOuvir,
   onExcluir,
   onEditar,
 }) {
@@ -32,11 +32,11 @@ export default function MusicaItem({
 
       <View style={styles.botoes}>
         <TouchableOpacity
-          style={styles.botaoConcluir}
-          onPress={onConcluir}
+          style={styles.botaoOuvir}
+          onPress={onOuvir}
         >
-          <Text>
-            {musica.concluida ? "✓ Ouvida" : "Ouvi"}
+          <Text style={styles.textoOuvir}>
+            ▶ Ouvir
           </Text>
         </TouchableOpacity>
 
@@ -87,10 +87,15 @@ const styles = StyleSheet.create({
     gap: 10,
   },
 
-  botaoConcluir: {
+  botaoOuvir: {
     backgroundColor: "#1DB954",
     padding: 10,
     borderRadius: 8,
+  },
+
+  textoOuvir: {
+    color: "#000000",
+    fontWeight: "500",
   },
 
   botaoExcluir: {

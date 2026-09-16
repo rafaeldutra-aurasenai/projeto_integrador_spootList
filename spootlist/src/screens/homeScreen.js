@@ -14,10 +14,7 @@ import { useFocusEffect } from "@react-navigation/native";
 
 import MusicaItem from "../components/MusicaItem";
 
-import {
-  carregarMusicas,
-  salvarMusicas,
-} from "../services/storage";
+import { carregarMusicas, salvarMusicas } from "../services/storage";
 
 export default function HomeScreen({ navigation }) {
   const [musicas, setMusicas] = useState([]);
@@ -35,7 +32,7 @@ export default function HomeScreen({ navigation }) {
   useFocusEffect(
     useCallback(() => {
       carregarDados();
-    }, [])
+    }, []),
   );
 
   async function concluirMusica(id) {
@@ -68,15 +65,13 @@ export default function HomeScreen({ navigation }) {
           style: "destructive",
 
           onPress: async () => {
-            const novasMusicas = musicas.filter(
-              (musica) => musica.id !== id
-            );
+            const novasMusicas = musicas.filter((musica) => musica.id !== id);
 
             setMusicas(novasMusicas);
             await salvarMusicas(novasMusicas);
           },
         },
-      ]
+      ],
     );
   }
 
@@ -90,9 +85,7 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.titulo}>
-        Suas músicas
-      </Text>
+      <Text style={styles.titulo}>Suas músicas</Text>
 
       <Text style={styles.subtitulo}>
         {musicas.length} música(s) cadastrada(s)
@@ -104,7 +97,7 @@ export default function HomeScreen({ navigation }) {
         renderItem={({ item }) => (
           <MusicaItem
             musica={item}
-            onConcluir={() => concluirMusica(item.id)}
+            onOuvir={() => ouvirMusica(item.link)}
             onExcluir={() => excluirMusica(item.id)}
             onEditar={() =>
               navigation.navigate("Editar", {
@@ -122,13 +115,9 @@ export default function HomeScreen({ navigation }) {
 
       <TouchableOpacity
         style={styles.botaoAdicionar}
-        onPress={() =>
-          navigation.navigate("Cadastro")
-        }
+        onPress={() => navigation.navigate("Cadastro")}
       >
-        <Text style={styles.textoBotao}>
-          + Adicionar música
-        </Text>
+        <Text style={styles.textoBotao}>+ Adicionar música</Text>
       </TouchableOpacity>
     </View>
   );

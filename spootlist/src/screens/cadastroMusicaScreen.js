@@ -9,28 +9,17 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-import {
-  carregarMusicas,
-  salvarMusicas,
-} from "../services/storage";
+import { carregarMusicas, salvarMusicas } from "../services/storage";
 
-export default function CadastroMusicaScreen({
-  navigation,
-}) {
+export default function CadastroMusicaScreen({ navigation }) {
   const [titulo, setTitulo] = useState("");
   const [artista, setArtista] = useState("");
   const [genero, setGenero] = useState("");
+  const [link, setLink] = useState("");
 
   async function cadastrarMusica() {
-    if (
-      titulo.trim() === "" ||
-      artista.trim() === "" ||
-      genero.trim() === ""
-    ) {
-      Alert.alert(
-        "Atenção",
-        "Preencha todos os campos."
-      );
+    if (titulo.trim() === "" || artista.trim() === "" || genero.trim() === "") {
+      Alert.alert("Atenção", "Preencha todos os campos.");
 
       return;
     }
@@ -42,13 +31,11 @@ export default function CadastroMusicaScreen({
       titulo: titulo.trim(),
       artista: artista.trim(),
       genero: genero.trim(),
+      link: link.trim(),
       concluida: false,
     };
 
-    const novasMusicas = [
-      ...musicas,
-      novaMusica,
-    ];
+    const novasMusicas = [...musicas, novaMusica];
 
     await salvarMusicas(novasMusicas);
 
@@ -60,9 +47,7 @@ export default function CadastroMusicaScreen({
       style={styles.container}
       contentContainerStyle={styles.conteudo}
     >
-      <Text style={styles.label}>
-        Nome da música
-      </Text>
+      <Text style={styles.label}>Nome da música</Text>
 
       <TextInput
         style={styles.input}
@@ -72,9 +57,7 @@ export default function CadastroMusicaScreen({
         onChangeText={setTitulo}
       />
 
-      <Text style={styles.label}>
-        Artista
-      </Text>
+      <Text style={styles.label}>Artista</Text>
 
       <TextInput
         style={styles.input}
@@ -84,9 +67,7 @@ export default function CadastroMusicaScreen({
         onChangeText={setArtista}
       />
 
-      <Text style={styles.label}>
-        Gênero
-      </Text>
+      <Text style={styles.label}>Gênero</Text>
 
       <TextInput
         style={styles.input}
@@ -96,13 +77,8 @@ export default function CadastroMusicaScreen({
         onChangeText={setGenero}
       />
 
-      <TouchableOpacity
-        style={styles.botao}
-        onPress={cadastrarMusica}
-      >
-        <Text style={styles.textoBotao}>
-          Cadastrar música
-        </Text>
+      <TouchableOpacity style={styles.botao} onPress={cadastrarMusica}>
+        <Text style={styles.textoBotao}>Cadastrar música</Text>
       </TouchableOpacity>
     </ScrollView>
   );
