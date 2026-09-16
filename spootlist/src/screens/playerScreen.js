@@ -30,6 +30,7 @@ function formatarTempo(segundos = 0) {
 
 export default function PlayerScreen({ route, navigation }) {
   const musicaId = route.params?.musicaId;
+  const autoPlay = route.params?.autoPlay ?? true;
 
   const [musicas, setMusicas] = useState([]);
   const [musica, setMusica] = useState(null);
@@ -42,12 +43,18 @@ export default function PlayerScreen({ route, navigation }) {
     return musica.audioUrl?.trim() || musica.link?.trim() || null;
   }, [musica]);
 
-  const player = useAudioPlayer(audioUrl, {
+  const player = useAudioPlayer({
     updateInterval: 250,
     downloadFirst: false,
   });
 
   const status = useAudioPlayerStatus(player);
+
+  useEffect(() => {
+    if (!audioUrl) return;
+
+    player.replace(audioUrl);
+  }, [audioUrl, player]);
 
   useEffect(() => {
     async function preparar() {
@@ -89,10 +96,20 @@ export default function PlayerScreen({ route, navigation }) {
   }, []);
 
   useEffect(() => {
-    if (audioUrl && status.isLoaded) {
+    if (!autoPlay) return;
+    if (audioUrl && status.isLoaded && !status.playing) {
       player.play();
     }
-  }, [audioUrl, status.isLoaded, player]);
+  }, [audioUrl, autoPlay, status.isLoaded, status.playing, player]);
+
+  useEffect(() => {
+    return () => {
+      if (status.isLoaded) {
+        player.pause();
+        player.seekTo(0);
+      }
+    };
+  }, [player, status.isLoaded]);
 
   useEffect(() => {
     if (status.error) {
@@ -109,6 +126,12 @@ export default function PlayerScreen({ route, navigation }) {
         "Áudio não cadastrado",
         "Edite esta música e informe uma URL direta de áudio."
       );
+      return;
+    }
+
+    if (!status.isLoaded) {
+      player.replace(audioUrl);
+      player.play();
       return;
     }
 

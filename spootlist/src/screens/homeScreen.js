@@ -1,5 +1,5 @@
-import { useCallback, useFocusEffect } from "@react-navigation/native";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 
 import {
   ActivityIndicator,
@@ -40,6 +40,7 @@ export default function HomeScreen({ navigation }) {
   function ouvirMusica(musica) {
     navigation.navigate("Player", {
       musicaId: musica.id,
+      autoPlay: true,
     });
   }
 
@@ -170,4 +171,3 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
-

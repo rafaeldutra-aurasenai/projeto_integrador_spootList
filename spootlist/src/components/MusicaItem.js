@@ -6,10 +6,10 @@ import {
 } from "react-native";
 
 export default function MusicaItem({
-  musica,
-  onOuvir,
-  onExcluir,
-  onEditar,
+  musica = {},
+  onOuvir = () => {},
+  onExcluir = () => {},
+  onEditar = () => {},
 }) {
   return (
     <View style={styles.card}>
@@ -18,15 +18,15 @@ export default function MusicaItem({
         onPress={onEditar}
       >
         <Text style={styles.titulo}>
-          🎵 {musica.titulo}
+          🎵 {musica.titulo ?? "Sem título"}
         </Text>
 
         <Text style={styles.artista}>
-          {musica.artista}
+          {musica.artista ?? "Artista desconhecido"}
         </Text>
 
         <Text style={styles.genero}>
-          {musica.genero}
+          {musica.genero ?? "Gênero não informado"}
         </Text>
       </TouchableOpacity>
 
