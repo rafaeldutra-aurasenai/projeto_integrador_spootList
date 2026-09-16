@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "../screens/homeScreen";
 import CadastroMusicaScreen from "../screens/cadastroMusicaScreen";
 import EditarMusicaScreen from "../screens/editarMusicaScreen";
+import PlayerScreen from "../screens/playerScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -42,6 +43,14 @@ export default function AppNavigator() {
           component={EditarMusicaScreen}
           options={{
             title: "Editar música",
+          }}
+        />
+
+        <Stack.Screen
+          name="Player"
+          component={PlayerScreen}
+          options={{
+            headerShown: false,
           }}
         />
       </Stack.Navigator>

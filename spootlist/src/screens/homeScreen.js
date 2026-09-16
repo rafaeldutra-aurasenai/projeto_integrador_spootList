@@ -1,20 +1,23 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useFocusEffect } from "@react-navigation/native";
+import { useState } from "react";
 
 import {
   ActivityIndicator,
   Alert,
   FlatList,
+  Linking,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
 
-import { useFocusEffect } from "@react-navigation/native";
-
 import MusicaItem from "../components/MusicaItem";
 
-import { carregarMusicas, salvarMusicas } from "../services/storage";
+import {
+  carregarMusicas,
+  salvarMusicas,
+} from "../services/storage";
 
 export default function HomeScreen({ navigation }) {
   const [musicas, setMusicas] = useState([]);
@@ -32,23 +35,42 @@ export default function HomeScreen({ navigation }) {
   useFocusEffect(
     useCallback(() => {
       carregarDados();
-    }, []),
+    }, [])
   );
 
-  async function concluirMusica(id) {
-    const novasMusicas = musicas.map((musica) => {
-      if (musica.id === id) {
-        return {
-          ...musica,
-          concluida: !musica.concluida,
-        };
+  async function ouvirMusica(musica) {
+    const link = musica.link?.trim();
+
+    if (!link) {
+      Alert.alert(
+        "Música sem link",
+        "Esta música foi cadastrada antes da função de reprodução. Edite a música e adicione o link do YouTube, Spotify ou outro serviço."
+      );
+
+      return;
+    }
+
+    try {
+      const podeAbrir = await Linking.canOpenURL(link);
+
+      if (!podeAbrir) {
+        Alert.alert(
+          "Não foi possível abrir",
+          "O celular não conseguiu abrir este link. Verifique se o endereço está correto."
+        );
+
+        return;
       }
 
-      return musica;
-    });
+      await Linking.openURL(link);
+    } catch (erro) {
+      console.log("Erro ao abrir música:", erro);
 
-    setMusicas(novasMusicas);
-    await salvarMusicas(novasMusicas);
+      Alert.alert(
+        "Erro",
+        "Não foi possível abrir a música. Verifique o link cadastrado."
+      );
+    }
   }
 
   function excluirMusica(id) {
@@ -65,13 +87,15 @@ export default function HomeScreen({ navigation }) {
           style: "destructive",
 
           onPress: async () => {
-            const novasMusicas = musicas.filter((musica) => musica.id !== id);
+            const novasMusicas = musicas.filter(
+              (musica) => musica.id !== id
+            );
 
             setMusicas(novasMusicas);
             await salvarMusicas(novasMusicas);
           },
         },
-      ],
+      ]
     );
   }
 
@@ -85,7 +109,9 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.titulo}>Suas músicas</Text>
+      <Text style={styles.titulo}>
+        Suas músicas
+      </Text>
 
       <Text style={styles.subtitulo}>
         {musicas.length} música(s) cadastrada(s)
@@ -97,7 +123,7 @@ export default function HomeScreen({ navigation }) {
         renderItem={({ item }) => (
           <MusicaItem
             musica={item}
-            onOuvir={() => ouvirMusica(item.link)}
+            onOuvir={() => ouvirMusica(item)}
             onExcluir={() => excluirMusica(item.id)}
             onEditar={() =>
               navigation.navigate("Editar", {
@@ -115,9 +141,13 @@ export default function HomeScreen({ navigation }) {
 
       <TouchableOpacity
         style={styles.botaoAdicionar}
-        onPress={() => navigation.navigate("Cadastro")}
+        onPress={() =>
+          navigation.navigate("Cadastro")
+        }
       >
-        <Text style={styles.textoBotao}>+ Adicionar música</Text>
+        <Text style={styles.textoBotao}>
+          + Adicionar música
+        </Text>
       </TouchableOpacity>
     </View>
   );
