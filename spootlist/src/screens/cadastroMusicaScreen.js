@@ -52,6 +52,32 @@ export default function CadastroMusicaScreen({
       return;
     }
 
+    const extensoesAudio = [
+      ".mp3",
+      ".mp4",
+      ".m4a",
+      ".aac",
+      ".wav",
+      ".ogg",
+      ".flac",
+      ".webm",
+      ".m3u",
+      ".m3u8",
+    ];
+
+    const urlSemQuery = audioUrlNormalizado.split("?")[0].split("#")[0].toLowerCase();
+    const atendeExtensao = extensoesAudio.some((extensao) => urlSemQuery.endsWith(extensao));
+    const eStreaming = /(?:stream|audio|media|playlist|manifest|podcast|listen)/i.test(audioUrlNormalizado);
+
+    if (!atendeExtensao && !eStreaming) {
+      Alert.alert(
+        "Link de áudio inválido",
+        "Use uma URL de áudio ou stream válida. O app aceita links de áudio e plataformas de streaming, não apenas arquivos MP3/MP4."
+      );
+
+      return;
+    }
+
     const musicas = await carregarMusicas();
 
     const novaMusica = {
