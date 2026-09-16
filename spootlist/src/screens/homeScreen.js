@@ -5,7 +5,6 @@ import {
   ActivityIndicator,
   Alert,
   FlatList,
-  Linking,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -38,39 +37,10 @@ export default function HomeScreen({ navigation }) {
     }, [])
   );
 
-  async function ouvirMusica(musica) {
-    const link = musica.link?.trim();
-
-    if (!link) {
-      Alert.alert(
-        "Música sem link",
-        "Esta música foi cadastrada antes da função de reprodução. Edite a música e adicione o link do YouTube, Spotify ou outro serviço."
-      );
-
-      return;
-    }
-
-    try {
-      const podeAbrir = await Linking.canOpenURL(link);
-
-      if (!podeAbrir) {
-        Alert.alert(
-          "Não foi possível abrir",
-          "O celular não conseguiu abrir este link. Verifique se o endereço está correto."
-        );
-
-        return;
-      }
-
-      await Linking.openURL(link);
-    } catch (erro) {
-      console.log("Erro ao abrir música:", erro);
-
-      Alert.alert(
-        "Erro",
-        "Não foi possível abrir a música. Verifique o link cadastrado."
-      );
-    }
+  function ouvirMusica(musica) {
+    navigation.navigate("Player", {
+      musicaId: musica.id,
+    });
   }
 
   function excluirMusica(id) {
@@ -200,3 +170,4 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
+

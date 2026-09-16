@@ -23,32 +23,33 @@ export default function EditarMusicaScreen({
   const [titulo, setTitulo] = useState(musica.titulo);
   const [artista, setArtista] = useState(musica.artista);
   const [genero, setGenero] = useState(musica.genero);
-  const [link, setLink] = useState(musica.link || "");
+  const [audioUrl, setAudioUrl] = useState(musica.audioUrl || musica.link || "");
+  const [capaUrl, setCapaUrl] = useState(musica.capaUrl || "");
 
   async function salvarEdicao() {
     if (
       titulo.trim() === "" ||
       artista.trim() === "" ||
       genero.trim() === "" ||
-      link.trim() === ""
+      audioUrl.trim() === ""
     ) {
       Alert.alert(
         "Atenção",
-        "Preencha todos os campos, incluindo o link da música."
+        "Preencha todos os campos, incluindo o endereço do áudio."
       );
 
       return;
     }
 
-    const linkNormalizado = link.trim();
+    const audioUrlNormalizado = audioUrl.trim();
 
     if (
-      !linkNormalizado.startsWith("http://") &&
-      !linkNormalizado.startsWith("https://")
+      !audioUrlNormalizado.startsWith("http://") &&
+      !audioUrlNormalizado.startsWith("https://")
     ) {
       Alert.alert(
         "Link inválido",
-        "Digite um link começando com http:// ou https://"
+        "Digite uma URL começando com http:// ou https://"
       );
 
       return;
@@ -63,7 +64,9 @@ export default function EditarMusicaScreen({
           titulo: titulo.trim(),
           artista: artista.trim(),
           genero: genero.trim(),
-          link: linkNormalizado,
+          audioUrl: audioUrlNormalizado,
+          link: audioUrlNormalizado,
+          capaUrl: capaUrl.trim(),
         };
       }
 
@@ -114,22 +117,36 @@ export default function EditarMusicaScreen({
       />
 
       <Text style={styles.label}>
-        Link da música
+        URL direta do áudio
       </Text>
 
       <TextInput
         style={styles.input}
-        value={link}
-        onChangeText={setLink}
-        placeholder="Cole o link do YouTube, Spotify etc."
+        value={audioUrl}
+        onChangeText={setAudioUrl}
+        placeholder="URL direta do áudio (MP3, M4A...)"
         placeholderTextColor="#777"
         autoCapitalize="none"
         keyboardType="url"
       />
 
       <Text style={styles.dica}>
-        Você pode alterar o link caso queira abrir outra versão da música.
+        Use uma URL direta para um arquivo de áudio reproduzível pelo app. Páginas de serviços de música não são arquivos de áudio.
       </Text>
+
+      <Text style={styles.label}>
+        URL da capa (opcional)
+      </Text>
+
+      <TextInput
+        style={styles.input}
+        value={capaUrl}
+        onChangeText={setCapaUrl}
+        placeholder="https://.../capa.jpg"
+        placeholderTextColor="#777"
+        autoCapitalize="none"
+        keyboardType="url"
+      />
 
       <TouchableOpacity
         style={styles.botao}
