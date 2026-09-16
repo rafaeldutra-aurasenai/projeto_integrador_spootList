@@ -2,12 +2,12 @@
 
 Aplicativo mobile de músicas inspirado em aplicativos de streaming, desenvolvido como Projeto Integrador do curso de **Programação para Dispositivos Móveis** do SENAI – Escola Ítalo Bologna.
 
-O objetivo do projeto é permitir que o usuário cadastre e organize suas músicas favoritas, utilizando uma interface simples e intuitiva e mantendo os dados salvos no dispositivo.
+O objetivo do projeto é permitir que o usuário cadastre e organize suas músicas favoritas, utilizando uma interface simples e intuitiva, mantendo os dados salvos no dispositivo e oferecendo um **player de áudio integrado ao próprio aplicativo**.
 
 ## 👥 Integrantes
 
-* **Rafael Henrique de Carvalho Dutra**
-* **Ana Katy Romão Vasconcellos**
+- **Rafael Henrique de Carvalho Dutra**
+- **Ana Katy Romão Vasconcellos**
 
 ## 📱 Sobre o projeto
 
@@ -15,20 +15,22 @@ O SpotList é um aplicativo desenvolvido para organizar uma lista pessoal de mú
 
 O usuário pode cadastrar músicas informando dados como:
 
-* 🎵 Nome da música
-* 🎤 Artista
-* 💿 Álbum
-* 🎸 Gênero
-* ❤️ Música favorita
-* ✅ Status da música
+- 🎵 Nome da música
+- 🎤 Artista
+- 💿 Álbum
+- 🎸 Gênero
+- ❤️ Música favorita
+- ✅ Status da música
+- 🔊 URL direta do áudio
+- 🖼️ URL da capa da música (opcional)
 
-O aplicativo permite visualizar, adicionar, editar e excluir músicas, mantendo os dados armazenados mesmo depois que o aplicativo é fechado.
+O aplicativo permite visualizar, adicionar, editar, excluir e reproduzir músicas, mantendo os dados armazenados mesmo depois que o aplicativo é fechado.
 
 ## ⚙️ Funcionalidades
 
 ### 🎵 Cadastro de músicas
 
-Permite adicionar novas músicas à lista através de um formulário.
+Permite adicionar novas músicas à lista através de um formulário, incluindo informações como título, artista, álbum, gênero, favorito, status e URL direta do áudio.
 
 ### 📋 Lista de músicas
 
@@ -36,7 +38,7 @@ As músicas cadastradas são exibidas em uma lista utilizando o componente `Flat
 
 ### ✏️ Edição
 
-O usuário pode alterar as informações de uma música já cadastrada.
+O usuário pode alterar as informações de uma música já cadastrada, incluindo a URL do áudio e a capa.
 
 ### 🗑️ Exclusão
 
@@ -50,18 +52,46 @@ O usuário pode marcar músicas como favoritas para facilitar sua organização.
 
 As músicas podem ter seu status atualizado, permitindo identificar quais já foram ouvidas.
 
+### ▶️ Player de música integrado
+
+Ao tocar em **▶ Ouvir**, o aplicativo abre a tela **PlayerScreen**, mantendo a reprodução dentro do SpotList.
+
+O player possui:
+
+- 🖼️ Capa da música
+- 🎵 Nome da música
+- 🎤 Artista
+- 🎸 Gênero
+- 📊 Barra de progresso interativa
+- ⏮️ Música anterior
+- ▶️ Reproduzir
+- ⏸️ Pausar
+- ⏭️ Próxima música
+- ⏱️ Exibição do tempo atual e duração da música
+
+A navegação entre as músicas é feita a partir das músicas cadastradas no aplicativo.
+
+### 🔊 Reprodução de áudio
+
+A reprodução é realizada utilizando a biblioteca **`expo-audio`**.
+
+Para funcionar corretamente, o campo de áudio deve receber uma **URL direta e reproduzível de um arquivo ou stream de áudio**, como uma URL que forneça diretamente um arquivo MP3 ou M4A.
+
+> **Importante:** uma URL que apenas abre uma página de um serviço de música não é necessariamente uma URL de áudio reproduzível. Nesse caso, é necessário cadastrar uma fonte de áudio direta e autorizada para reprodução.
+
 ### 💾 Persistência de dados
 
 As informações são armazenadas no dispositivo utilizando **AsyncStorage**, permitindo que os dados continuem disponíveis mesmo depois de fechar ou reabrir o aplicativo.
 
 ## 🛠️ Tecnologias utilizadas
 
-* **React Native**
-* **Expo**
-* **JavaScript**
-* **React Navigation**
-* **AsyncStorage**
-* **FlatList**
+- **React Native**
+- **Expo**
+- **JavaScript**
+- **React Navigation**
+- **AsyncStorage**
+- **FlatList**
+- **expo-audio**
 
 ## 📂 Estrutura do projeto
 
@@ -69,6 +99,9 @@ As informações são armazenadas no dispositivo utilizando **AsyncStorage**, pe
 SpotList/
 │
 ├── assets/
+│   ├── icon.png
+│   ├── splash-icon.png
+│   └── ...
 │
 ├── src/
 │   │
@@ -76,20 +109,45 @@ SpotList/
 │   │   └── MusicaItem.js
 │   │
 │   ├── screens/
-│   │   ├── HomeScreen.js
-│   │   ├── CadastroMusicaScreen.js
-│   │   └── EditarMusicaScreen.js
+│   │   ├── homeScreen.js
+│   │   ├── cadastroMusicaScreen.js
+│   │   ├── editarMusicaScreen.js
+│   │   └── playerScreen.js
 │   │
 │   ├── navigation/
-│   │   └── AppNavigator.js
+│   │   └── appNavigator.js
 │   │
 │   └── services/
 │       └── storage.js
 │
 ├── App.js
+├── app.json
+├── index.js
 ├── package.json
 └── README.md
 ```
+
+## 🎧 PlayerScreen
+
+A `PlayerScreen` foi adicionada ao projeto para que o botão **▶ Ouvir** não precise abrir uma página externa.
+
+O fluxo de reprodução funciona da seguinte forma:
+
+```text
+Lista de músicas
+       │
+       ▼
+   ▶ Ouvir
+       │
+       ▼
+   PlayerScreen
+       │
+       ├── ⏮ Anterior
+       ├── ▶/⏸ Reproduzir/Pausar
+       └── ⏭ Próxima
+```
+
+A tela recebe o `id` da música selecionada, carrega os dados armazenados e inicia a reprodução do áudio quando uma URL válida estiver disponível.
 
 ## 💾 Persistência de dados
 
@@ -107,32 +165,43 @@ Exemplo de uma música:
   album: "Nome do álbum",
   genero: "Pop",
   favorita: true,
-  concluida: false
+  concluida: false,
+  audioUrl: "https://exemplo.com/audio.mp3",
+  link: "https://exemplo.com/audio.mp3",
+  capaUrl: "https://exemplo.com/capa.jpg"
 }
 ```
+
+### Campos relacionados ao player
+
+- `audioUrl`: URL direta usada pelo `expo-audio` para reproduzir a música.
+- `link`: mantido como compatibilidade com músicas cadastradas em versões anteriores do aplicativo.
+- `capaUrl`: URL opcional da imagem da capa. Quando não é informada, o aplicativo utiliza o ícone do próprio app como imagem padrão.
 
 ## 🔄 CRUD
 
 O projeto implementa as quatro operações principais do CRUD:
 
-| Operação   | Função no aplicativo                    |
-| ---------- | --------------------------------------- |
-| **Create** | Cadastrar uma nova música               |
-| **Read**   | Listar as músicas cadastradas           |
+| Operação | Função no aplicativo |
+| --- | --- |
+| **Create** | Cadastrar uma nova música |
+| **Read** | Listar as músicas cadastradas |
 | **Update** | Editar informações e atualizar o status |
-| **Delete** | Excluir uma música                      |
+| **Delete** | Excluir uma música |
 
 ## 🎯 Objetivo acadêmico
 
 O projeto foi desenvolvido para colocar em prática os conhecimentos de:
 
-* Desenvolvimento de interfaces para dispositivos móveis;
-* Componentização no React Native;
-* Utilização de `FlatList`;
-* Navegação entre telas;
-* Implementação de operações CRUD;
-* Persistência de dados no dispositivo;
-* Organização de um projeto mobile.
+- Desenvolvimento de interfaces para dispositivos móveis;
+- Componentização no React Native;
+- Utilização de `FlatList`;
+- Navegação entre telas;
+- Implementação de operações CRUD;
+- Persistência de dados no dispositivo;
+- Reprodução de áudio em aplicativo mobile;
+- Utilização de `expo-audio`;
+- Organização de um projeto mobile.
 
 ## 🚀 Como executar o projeto
 
@@ -154,6 +223,8 @@ cd SpotList
 npm install
 ```
 
+A dependência `expo-audio` está declarada no `package.json` e será instalada junto com as demais dependências.
+
 ### 4. Execute o projeto
 
 ```bash
@@ -161,6 +232,25 @@ npx expo start
 ```
 
 Depois, o aplicativo pode ser executado utilizando um dispositivo físico com o **Expo Go** ou um emulador compatível.
+
+## 🧪 Testando o Player
+
+Para testar o player:
+
+1. Cadastre uma música.
+2. Preencha a **URL direta do áudio** com uma fonte de áudio reproduzível e autorizada.
+3. Opcionalmente, informe uma URL para a capa.
+4. Salve a música.
+5. Na lista, toque em **▶ Ouvir**.
+6. O aplicativo abrirá a `PlayerScreen`.
+7. Utilize **▶/⏸**, **⏮** e **⏭** para controlar a reprodução.
+8. Também é possível tocar em diferentes pontos da barra de progresso para avançar ou voltar na música.
+
+## ⚠️ Observação sobre URLs de áudio
+
+O SpotList não transforma automaticamente páginas de serviços de streaming em arquivos de áudio.
+
+Por isso, o campo **URL direta do áudio** deve apontar para uma fonte de áudio que possa ser reproduzida diretamente pelo aplicativo. Use somente conteúdos que você tenha autorização para reproduzir ou disponibilizar dessa forma.
 
 ## 📚 Projeto Integrador
 
