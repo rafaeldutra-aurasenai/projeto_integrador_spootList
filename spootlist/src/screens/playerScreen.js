@@ -115,7 +115,7 @@ export default function PlayerScreen({ route, navigation }) {
     if (status.error) {
       Alert.alert(
         "Não foi possível reproduzir",
-        "O endereço cadastrado não parece ser um arquivo de áudio reproduzível. Use uma URL direta para um arquivo de áudio (por exemplo, MP3/M4A) ou um arquivo de áudio do próprio projeto."
+        "O endereço cadastrado não está respondendo como stream de áudio válido. Tente uma URL direta de mídia, stream ou arquivo de áudio acessível pelo dispositivo."
       );
     }
   }, [status.error]);
@@ -124,7 +124,7 @@ export default function PlayerScreen({ route, navigation }) {
     if (!audioUrl) {
       Alert.alert(
         "Áudio não cadastrado",
-        "Edite esta música e informe uma URL direta de áudio."
+        "Edite esta música e informe uma URL válida de stream ou arquivo de áudio."
       );
       return;
     }

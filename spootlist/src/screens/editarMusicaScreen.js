@@ -55,27 +55,16 @@ export default function EditarMusicaScreen({
       return;
     }
 
-    const extensoesAudio = [
-      ".mp3",
-      ".mp4",
-      ".m4a",
-      ".aac",
-      ".wav",
-      ".ogg",
-      ".flac",
-      ".webm",
-      ".m3u",
-      ".m3u8",
-    ];
+    try {
+      const urlValida = new URL(audioUrlNormalizado);
 
-    const urlSemQuery = audioUrlNormalizado.split("?")[0].split("#")[0].toLowerCase();
-    const atendeExtensao = extensoesAudio.some((extensao) => urlSemQuery.endsWith(extensao));
-    const eStreaming = /(?:stream|audio|media|playlist|manifest|podcast|listen)/i.test(audioUrlNormalizado);
-
-    if (!atendeExtensao && !eStreaming) {
+      if (urlValida.protocol !== "http:" && urlValida.protocol !== "https:") {
+        throw new Error("Protocolo inválido");
+      }
+    } catch (erro) {
       Alert.alert(
-        "Link de áudio inválido",
-        "Use uma URL de áudio ou stream válida. O app aceita links de áudio e plataformas de streaming, não apenas arquivos MP3/MP4."
+        "Link inválido",
+        "Use uma URL válida com http:// ou https://. O app aceita também streams sem extensão no nome do arquivo."
       );
 
       return;
