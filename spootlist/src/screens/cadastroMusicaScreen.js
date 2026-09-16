@@ -9,17 +9,44 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-import { carregarMusicas, salvarMusicas } from "../services/storage";
+import {
+  carregarMusicas,
+  salvarMusicas,
+} from "../services/storage";
 
-export default function CadastroMusicaScreen({ navigation }) {
+export default function CadastroMusicaScreen({
+  navigation,
+}) {
   const [titulo, setTitulo] = useState("");
   const [artista, setArtista] = useState("");
   const [genero, setGenero] = useState("");
   const [link, setLink] = useState("");
 
   async function cadastrarMusica() {
-    if (titulo.trim() === "" || artista.trim() === "" || genero.trim() === "") {
-      Alert.alert("Atenção", "Preencha todos os campos.");
+    if (
+      titulo.trim() === "" ||
+      artista.trim() === "" ||
+      genero.trim() === "" ||
+      link.trim() === ""
+    ) {
+      Alert.alert(
+        "Atenção",
+        "Preencha todos os campos, incluindo o link da música."
+      );
+
+      return;
+    }
+
+    const linkNormalizado = link.trim();
+
+    if (
+      !linkNormalizado.startsWith("http://") &&
+      !linkNormalizado.startsWith("https://")
+    ) {
+      Alert.alert(
+        "Link inválido",
+        "Digite um link começando com http:// ou https://"
+      );
 
       return;
     }
@@ -31,11 +58,14 @@ export default function CadastroMusicaScreen({ navigation }) {
       titulo: titulo.trim(),
       artista: artista.trim(),
       genero: genero.trim(),
-      link: link.trim(),
+      link: linkNormalizado,
       concluida: false,
     };
 
-    const novasMusicas = [...musicas, novaMusica];
+    const novasMusicas = [
+      ...musicas,
+      novaMusica,
+    ];
 
     await salvarMusicas(novasMusicas);
 
@@ -47,7 +77,9 @@ export default function CadastroMusicaScreen({ navigation }) {
       style={styles.container}
       contentContainerStyle={styles.conteudo}
     >
-      <Text style={styles.label}>Nome da música</Text>
+      <Text style={styles.label}>
+        Nome da música
+      </Text>
 
       <TextInput
         style={styles.input}
@@ -57,7 +89,9 @@ export default function CadastroMusicaScreen({ navigation }) {
         onChangeText={setTitulo}
       />
 
-      <Text style={styles.label}>Artista</Text>
+      <Text style={styles.label}>
+        Artista
+      </Text>
 
       <TextInput
         style={styles.input}
@@ -67,7 +101,9 @@ export default function CadastroMusicaScreen({ navigation }) {
         onChangeText={setArtista}
       />
 
-      <Text style={styles.label}>Gênero</Text>
+      <Text style={styles.label}>
+        Gênero
+      </Text>
 
       <TextInput
         style={styles.input}
@@ -77,8 +113,31 @@ export default function CadastroMusicaScreen({ navigation }) {
         onChangeText={setGenero}
       />
 
-      <TouchableOpacity style={styles.botao} onPress={cadastrarMusica}>
-        <Text style={styles.textoBotao}>Cadastrar música</Text>
+      <Text style={styles.label}>
+        Link da música
+      </Text>
+
+      <TextInput
+        style={styles.input}
+        placeholder="Cole o link do YouTube, Spotify etc."
+        placeholderTextColor="#777"
+        value={link}
+        onChangeText={setLink}
+        autoCapitalize="none"
+        keyboardType="url"
+      />
+
+      <Text style={styles.dica}>
+        Ao tocar em “Ouvir”, o celular abrirá este link no aplicativo ou navegador correspondente.
+      </Text>
+
+      <TouchableOpacity
+        style={styles.botao}
+        onPress={cadastrarMusica}
+      >
+        <Text style={styles.textoBotao}>
+          Cadastrar música
+        </Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -107,6 +166,13 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     fontSize: 16,
+  },
+
+  dica: {
+    color: "#999999",
+    fontSize: 13,
+    lineHeight: 18,
+    marginTop: 10,
   },
 
   botao: {

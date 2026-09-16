@@ -23,16 +23,32 @@ export default function EditarMusicaScreen({
   const [titulo, setTitulo] = useState(musica.titulo);
   const [artista, setArtista] = useState(musica.artista);
   const [genero, setGenero] = useState(musica.genero);
+  const [link, setLink] = useState(musica.link || "");
 
   async function salvarEdicao() {
     if (
       titulo.trim() === "" ||
       artista.trim() === "" ||
-      genero.trim() === ""
+      genero.trim() === "" ||
+      link.trim() === ""
     ) {
       Alert.alert(
         "Atenção",
-        "Preencha todos os campos."
+        "Preencha todos os campos, incluindo o link da música."
+      );
+
+      return;
+    }
+
+    const linkNormalizado = link.trim();
+
+    if (
+      !linkNormalizado.startsWith("http://") &&
+      !linkNormalizado.startsWith("https://")
+    ) {
+      Alert.alert(
+        "Link inválido",
+        "Digite um link começando com http:// ou https://"
       );
 
       return;
@@ -47,6 +63,7 @@ export default function EditarMusicaScreen({
           titulo: titulo.trim(),
           artista: artista.trim(),
           genero: genero.trim(),
+          link: linkNormalizado,
         };
       }
 
@@ -96,6 +113,24 @@ export default function EditarMusicaScreen({
         placeholderTextColor="#777"
       />
 
+      <Text style={styles.label}>
+        Link da música
+      </Text>
+
+      <TextInput
+        style={styles.input}
+        value={link}
+        onChangeText={setLink}
+        placeholder="Cole o link do YouTube, Spotify etc."
+        placeholderTextColor="#777"
+        autoCapitalize="none"
+        keyboardType="url"
+      />
+
+      <Text style={styles.dica}>
+        Você pode alterar o link caso queira abrir outra versão da música.
+      </Text>
+
       <TouchableOpacity
         style={styles.botao}
         onPress={salvarEdicao}
@@ -131,6 +166,13 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     fontSize: 16,
+  },
+
+  dica: {
+    color: "#999999",
+    fontSize: 13,
+    lineHeight: 18,
+    marginTop: 10,
   },
 
   botao: {
